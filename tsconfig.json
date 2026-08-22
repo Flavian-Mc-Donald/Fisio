@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+        "target": "es2025",
+        "module": "commonjs",
+        "rootDir": "./",
+        "outDir": "./dist",
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "noEmitOnError": true,
+        "allowSyntheticDefaultImports": true,
+        "types": ["jest", "node"]
+    }, 
+    "include": ["src/**/*" , 
+                "tests/**/*" , 
+                "**./*.spec.ts" , 
+                "**/*.test.ts" , 
+                "src/__tests__/**/*" , 
+            ],
+    "exclude": ["node_modules", "dist"]
+}
