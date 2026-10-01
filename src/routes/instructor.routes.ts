@@ -1,48 +1,17 @@
 import { Router } from 'express';
 import { InstructorController } from '../controllers/instructor.controller';
-import { InstructorService } from '../services/instructor.service';
-import { InstructorRepositoryMemory } from '../repositories/instructor.repository';
-import { authMiddleware } from '../middlewares/auth.middleware';
-import { requireRole } from '../middlewares/role.middleware';
-import { UserRole } from '../types/roles.enum';
+import { InstructorService } from '../services/instructor.service'; 
+import { InstructorRepositoryMongo } from '../repositories/mongo/instructor.repository.mongo';
 
 const instructorRouter = Router();
-const instructorRepo = new InstructorRepositoryMemory();
+const instructorRepo = new InstructorRepositoryMongo();
 const instructorService = new InstructorService(instructorRepo);
 const instructorController = new InstructorController(instructorService);
 
-instructorRouter.use(authMiddleware);
+instructorRouter.post('/', (req, res) => instructorController.create(req, res));
+instructorRouter.get('/', (req, res) => instructorController.findAll(req, res));
+instructorRouter.get('/:id', (req, res) => instructorController.findById(req, res));
+instructorRouter.put('/:id', (req, res) => instructorController.update(req, res));
+instructorRouter.delete('/:id', (req, res) => instructorController.delete(req, res));
 
-instructorRouter.post(
-  '/',
-  requireRole(UserRole.ADMIN, UserRole.RECEPTIONIST),
-  instructorController.create
-);
-
-instructorRouter.get(
-  '/',
-  requireRole(UserRole.ADMIN, UserRole.RECEPTIONIST, UserRole.INSTRUCTOR, UserRole.CLIENT),
-  instructorController.findAll
-);
-
-
-instructorRouter.get(
-  '/:id',
-  requireRole(UserRole.ADMIN, UserRole.RECEPTIONIST, UserRole.INSTRUCTOR, UserRole.CLIENT),
-  instructorController.findById
-);
-
-
-instructorRouter.put(
-  '/:id',
-  requireRole(UserRole.ADMIN, UserRole.RECEPTIONIST, UserRole.INSTRUCTOR),
-  instructorController.update
-);
-
-instructorRouter.delete(
-  '/:id',
-  requireRole(UserRole.ADMIN, UserRole.RECEPTIONIST),
-  instructorController.delete
-);
-
-export {instructorRouter};
+export default instructorRouter;

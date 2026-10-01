@@ -1,8 +1,8 @@
 import express from 'express';
 import { logMiddleware } from './middlewares/log.middleware';
-import { clientRouter } from './routes/client.routes';
-import { instructorRouter } from './routes/instructor.routes';
-import { appointmentRouter } from './routes/appointment.routes';
+import  clientRouter  from './routes/client.routes';
+import  instructorRouter  from './routes/instructor.routes';
+import  appointmentRouter  from './routes/appointment.routes';
 
 
 const app = express();

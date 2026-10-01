@@ -1,49 +1,20 @@
 import { Router } from 'express';
 import { ClientController } from '../controllers/client.controller';
 import { ClientService } from '../services/client.service';
-import { ClientRepositoryMemory } from '../repositories/client.repository';
-import { InstructorRepositoryMemory } from '../repositories/instructor.repository';
-import { authMiddleware } from '../middlewares/auth.middleware';
-import { requireRole } from '../middlewares/role.middleware';
-import { UserRole } from '../types/roles.enum';
+import { ClientRepositoryMongo } from '../repositories/mongo/client.repository.mongo';
+import { InstructorRepositoryMongo } from '../repositories/mongo/instructor.repository.mongo';
 
 const clientRouter = Router();
-const clientRepo = new ClientRepositoryMemory();
-const instructorRepo = new InstructorRepositoryMemory();
+
+const clientRepo = new ClientRepositoryMongo();
+const instructorRepo = new InstructorRepositoryMongo();
 const clientService = new ClientService(clientRepo, instructorRepo);
 const clientController = new ClientController(clientService);
 
+clientRouter.post('/', (req, res) => clientController.create(req, res));
+clientRouter.get('/', (req, res) => clientController.findAll(req, res));
+clientRouter.get('/:id', (req, res) => clientController.findById(req, res));
+clientRouter.put('/:id', (req, res) => clientController.update(req, res));
+clientRouter.delete('/:id', (req, res) => clientController.delete(req, res));
 
-clientRouter.use(authMiddleware);
-
-clientRouter.post(
-  '/',
-  requireRole(UserRole.ADMIN, UserRole.RECEPTIONIST),
-  clientController.create
-);
-
-clientRouter.get(
-  '/',
-  requireRole(UserRole.ADMIN, UserRole.RECEPTIONIST, UserRole.INSTRUCTOR),
-  clientController.findAll
-);
-
-clientRouter.get(
-  '/:id',
-  requireRole(UserRole.ADMIN, UserRole.RECEPTIONIST, UserRole.INSTRUCTOR, UserRole.CLIENT),
-  clientController.findById
-);
-
-clientRouter.put(
-  '/:id',
-  requireRole(UserRole.ADMIN, UserRole.RECEPTIONIST, UserRole.CLIENT),
-  clientController.update
-);
-
-clientRouter.delete(
-  '/:id',
-  requireRole(UserRole.ADMIN, UserRole.RECEPTIONIST),
-  clientController.delete
-);
-
-export { clientRouter };
+export default clientRouter;
