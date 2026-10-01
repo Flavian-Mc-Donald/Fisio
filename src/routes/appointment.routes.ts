@@ -14,10 +14,11 @@ const instructorRepo = new InstructorRepositoryMongo();
 const appointmentService = new AppointmentService(appointmentRepo, clientRepo, instructorRepo);
 const appointmentController = new AppointmentController(appointmentService);
 
-appointmentRouter.post('/', (req, res) => appointmentController.create(req, res));
-appointmentRouter.get('/', (req, res) => appointmentController.findAll(req, res));
+appointmentRouter.post('/', (req: any, res) => appointmentController.create(req, res));
+appointmentRouter.get('/', (req: any, res) => appointmentController.findAll(req, res));
 appointmentRouter.get('/:id', (req, res) => appointmentController.findById(req, res));
-appointmentRouter.put('/:id', (req, res) => appointmentController.update(req, res));
-appointmentRouter.delete('/:id', (req, res) => appointmentController.delete(req, res));
+
+appointmentRouter.put('/:id/reschedule', (req, res) => appointmentController.reschedule(req, res));
+appointmentRouter.put('/:id/cancel', (req, res) => appointmentController.cancel(req, res));
 
 export default appointmentRouter;
